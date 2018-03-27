@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">GithubGraphqlClient</string>
+
+    <!-- search fragment -->
+
+    <string name="search_label">FIND YOUR FAVOURITE MUSIC</string>
+    <string name="search_sublabel1">Write your artist or song name</string>
+    <string name="search_sublabel2">Go to listen some music!</string>
+    <string name="search_hint">Enter search term</string>
+    <string name="no_results">No matches found</string>
+    <string name="error_loading">Can not perform the search, sorry for the inconveniences!></string>
+
+
+    <string name="category_count">Number of elements: </string>
+</resources>
