@@ -1,0 +1,62 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app2="http://schemas.android.com/apk/res-auto"
+    tools:context="com.graphqlexample.githubgraphqlclient.ui.fragments.fragments.SearchFragment"
+    android:background="@color/white">
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+
+        <TextView
+            android:id="@+id/search_label"
+            style="@style/TextTitleStyle"
+            android:layout_width="match_parent"
+            android:text="@string/search_label" />
+
+        <TextView
+            android:id="@+id/search_subtitle1"
+            style="@style/TextSubtitleStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/search_sublabel1" />
+
+
+        <io.github.yuweiguocn.lib.squareloading.SquareLoading
+            android:id="@+id/pb_searching"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            app2:squareColor="@color/colorPrimary"
+            app2:squareSize="12dp"
+            app2:squareCorner="2dp"
+            app2:dividerSize="2dp"
+            app2:xCount="4"
+            app2:yCount="3"
+            android:visibility="gone"
+            />
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/swipe_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/list_items"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+
+    </LinearLayout>
+
+</FrameLayout>
