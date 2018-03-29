@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.graphqlexample.githubgraphqlclient.R;
 import com.graphqlexample.githubgraphqlclient.data.model.GHCategory;
+import com.graphqlexample.githubgraphqlclient.data.networking.service.GithubEndpointManager;
 import com.graphqlexample.githubgraphqlclient.ui.BaseActivity;
 import com.graphqlexample.githubgraphqlclient.ui.fragments.fragments.SearchFragment;
 
@@ -32,6 +33,8 @@ public class MainActivity extends BaseActivity {
 // Commit the transaction
         transaction.commit();
         categoryItemList = new ArrayList<>();
+
+        GithubEndpointManager.getInstance().retrieveCategories();
     }
 
 
