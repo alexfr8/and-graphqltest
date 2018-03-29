@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.graphqlexample.githubgraphqlclient.data.model.GHCategory;
+import com.graphqlexample.graphqlexample.GetAllCategories;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,7 @@ import java.util.List;
 public class SearchCategoryAdapter extends RecyclerView.Adapter<SearchCategoryViewHolder> {
 
     //DATA
-    private List<GHCategory> mList = new ArrayList<>();
+    private List<GetAllCategories.MarketplaceCategory> mList = new ArrayList<>();
     //LAYOUT
     private int itemLayout;
 
@@ -31,7 +32,7 @@ public class SearchCategoryAdapter extends RecyclerView.Adapter<SearchCategoryVi
     private final OnItemClickListener listener;
     public interface OnItemClickListener {
 
-        void onItemClick(GHCategory searchItemSelected, int position);
+        void onItemClick(GetAllCategories.MarketplaceCategory searchItemSelected, int position);
     }
 
     /**
@@ -40,7 +41,7 @@ public class SearchCategoryAdapter extends RecyclerView.Adapter<SearchCategoryVi
      * @param itemLayout: the row layout
      * @param listener: the listener to ear the user item click
      */
-    public SearchCategoryAdapter(List<GHCategory> items, int itemLayout, OnItemClickListener listener) {
+    public SearchCategoryAdapter(List<GetAllCategories.MarketplaceCategory> items, int itemLayout, OnItemClickListener listener) {
 
         this.itemLayout = itemLayout;
         this.listener = listener;
@@ -58,7 +59,7 @@ public class SearchCategoryAdapter extends RecyclerView.Adapter<SearchCategoryVi
     @Override public void onBindViewHolder(final SearchCategoryViewHolder viewHolder, final int position) {
 
         final Integer pos = position;
-        final GHCategory categoryItem = mList.get(position);
+        final GetAllCategories.MarketplaceCategory categoryItem = mList.get(position);
         viewHolder.bindSearchItem(categoryItem);
 
 

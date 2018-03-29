@@ -5,6 +5,7 @@ import com.apollographql.apollo.ApolloClient;
 
 
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
 
 /**
@@ -20,10 +21,16 @@ public class GraphqlManager {
 
     public static ApolloClient getApolloClient() {
 
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+       // HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+
+       // logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(logging)
+                .addInterceptor(chain -> {
+                    Request original = chain.request();
+                    Request.Builder builder = original.newBuilder().method(original.method(), original.body());
+                    builder.header("Authorization", TOKEN);
+                    return chain.proceed(builder.build());
+                })
                 .build();
 
 

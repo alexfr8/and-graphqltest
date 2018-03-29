@@ -1,32 +1,37 @@
 package com.graphqlexample.githubgraphqlclient.ui.fragments.fragments;
 
-import android.content.Context;
+
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.KeyEvent;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.graphqlexample.githubgraphqlclient.R;
 import com.graphqlexample.githubgraphqlclient.adapters.SearchCategoryAdapter;
+import com.graphqlexample.githubgraphqlclient.adapters.SearchElementAdapter;
+import com.graphqlexample.githubgraphqlclient.adapters.SearchElementViewHolder;
 import com.graphqlexample.githubgraphqlclient.data.model.GHCategory;
 import com.graphqlexample.githubgraphqlclient.ui.BaseFragment;
 import com.graphqlexample.githubgraphqlclient.ui.activities.MainActivity;
 import com.graphqlexample.githubgraphqlclient.ui.fragments.Presenters.SearchPresenter;
 import com.graphqlexample.githubgraphqlclient.ui.fragments.Presenters.SearchPresenterImp;
 import com.graphqlexample.githubgraphqlclient.ui.fragments.Views.SearchView;
+import com.graphqlexample.graphqlexample.GetAllCategories;
+import com.graphqlexample.graphqlexample.GetEdgeXCategory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import io.github.yuweiguocn.lib.squareloading.SquareLoading;
 
@@ -35,19 +40,21 @@ public class SearchFragment extends BaseFragment implements SearchView,SearchCat
 
     public static final String POSITION = "POSITION";
     private static MainActivity activity;
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerViewCategory, recyclerViewElement;
+    private ImageButton backButton;
+    private int currentLimit = 10;
 
     private SquareLoading progressBar;
     SwipeRefreshLayout mSwipeRefreshLayout;
     private SearchPresenter presenter;
 
-    String query;
+    View root;
 
     public SearchFragment() {}
-    public static SearchFragment newInstance(MainActivity searchActivity) {
+    public static SearchFragment newInstance(MainActivity mainActivity) {
         Bundle args = new Bundle();
         SearchFragment fragment = new SearchFragment();
-        activity = searchActivity;
+        activity = mainActivity;
         return fragment;
     }
 
@@ -63,17 +70,30 @@ public class SearchFragment extends BaseFragment implements SearchView,SearchCat
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View root = inflater.inflate(R.layout.fra_search, container, false);
+        root = inflater.inflate(R.layout.fra_search, container, false);
 
 
         progressBar = root.findViewById(R.id.pb_searching);
         addAnimation(root);
-        prepareSearchView();
 
-        recyclerView = root.findViewById(R.id.list_items);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
 
+        recyclerViewCategory = root.findViewById(R.id.list_categories);
+        recyclerViewElement =root.findViewById(R.id.list_elements);
+        LinearLayoutManager layoutManagerCat = new LinearLayoutManager(getActivity());
+        LinearLayoutManager layoutManagerEl = new LinearLayoutManager(getActivity());
+        recyclerViewCategory.setLayoutManager(layoutManagerCat);
+        recyclerViewElement.setLayoutManager(layoutManagerEl);
+
+        backButton =  root.findViewById(R.id.btn_back);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.comeBack();
+
+            }
+        });
+        setupInit();
+        presenter.performCategorySearch();
         return root;
     }
 
@@ -94,108 +114,156 @@ public class SearchFragment extends BaseFragment implements SearchView,SearchCat
 
 
 
-    private void performSearch() {
-        if (query.length() != 0) {
-            presenter.performSearch(query);
-
-        } else {
-            List<GHCategory> filteredModelList = new ArrayList<GHCategory>();
-            updateList(filteredModelList);
-        }
-    }
-
-
-/*
-    public static InputFilter EMOJI_FILTER = new InputFilter() {
-
-        @Override
-        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-            for (int index = start; index < end; index++) {
-
-                int type = Character.getType(source.charAt(index));
-
-                if (type == Character.SURROGATE) {
-                    return "";
-                }
-            }
-            return null;
-        }
-    };*/
-    private void prepareSearchView() {
-
-      //  textSearchView.setInputType(InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
-      //  textSearchView.setHint(getResources().getString(R.string.search_hint));
-      //  textSearchView.setFilters(new InputFilter[]{EMOJI_FILTER});
-
-    }
-
-
-    private void updateList(List<GHCategory> itemList) {
-
-       /* SearchCategoryAdapter searchAdapter = new SearchCategoryAdapter(itemList,R.layout.row_searchitem,this);
-        if (itemList.size() >0) {
-            recyclerView.setVisibility(View.VISIBLE);
-            searchAdapter.setClickable(true);
-        } else {
-            recyclerView.setVisibility(View.VISIBLE);
-            SearchItem emptyTrack = new SearchItem();
-            emptyTrack.setTrackName(getString(R.string.no_results));
-            itemList.add(emptyTrack);
-            searchAdapter = new SearchCategoryAdapter(itemList, R.layout.row_searchitem, this);
-            searchAdapter.setClickable(false);
-        }
-        recyclerView.setAdapter(searchAdapter);*/
-    }
-
 
     @Override
-    public void onItemClick(GHCategory searchItemSelected, int position) {
-        // this.showDetailActivity(itemSelected);
-       // this.presenter.navigateDetails(searchItemSelected, position);
+    public void onItemClick(GetAllCategories.MarketplaceCategory searchItemSelected, int position) {
+
+        presenter.performMarketPlaceListingSearch(currentLimit, searchItemSelected.slug());
     }
 
 
 
     //SEARCHVIEW IMPLEMENTATION.
 
-    /*
-
     @Override
-    public void receiveSearchResults(List<SearchItem> results) {
-        Log.v("SEARCHFRAGMENTTAG", "Results: " + results.size());
-        activity.setSearchList(results);
-        this.updateList(results);
+    public void setupInit() {
+        currentLimit = 10;
     }
 
-    @Override
-    public void receiveErrorResults(VolleyError error) {
-        Toast.makeText(activity,getString(R.string.error_loading),Toast.LENGTH_SHORT).show();
-    }
-*/
+
     @Override
     public void showLoadinView() {
-        progressBar.setVisibility(View.VISIBLE);
+
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                progressBar.setVisibility(View.VISIBLE);
+            }//public void run() {
+        });
     }
 
     @Override
     public void hideLoadingView() {
-        progressBar.setVisibility(View.GONE);
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                progressBar.setVisibility(View.GONE);
+            }//public void run() {
+        });
+
     }
-/*
+
     @Override
-    public void goToDetails(SearchItem searchItem, int position) {
+    public void showError(String error) {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(activity,error,Toast.LENGTH_SHORT).show();
+            }
+        });
 
-        DetailFragment detailFragment = DetailFragment.newInstance(activity);
+    }
 
-        Bundle args = new Bundle();
-        args.putInt(POSITION, position);
-        detailFragment.setArguments(args);
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+    @Override
+    public void showCategoriesResult(List<GetAllCategories.MarketplaceCategory> categories) {
+        SearchCategoryAdapter searchAdapter = new SearchCategoryAdapter(categories,R.layout.row_searchitem,this);
+
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (categories.size() >0) {
+                    recyclerViewCategory.setVisibility(View.VISIBLE);
+                } else {
+                    presenter.noCategories();
+                }
+                recyclerViewCategory.setAdapter(searchAdapter);
+            }//public void run() {
+        });
+
+    }
+
+    @Override
+    public void showElementsResult(List<GetEdgeXCategory.Edge> elements) {
+        SearchElementAdapter searchAdapter = new SearchElementAdapter(elements,R.layout.row_element);
+
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (elements.size() >0) {
+                    recyclerViewElement.setVisibility(View.VISIBLE);
+                } else {
+                    presenter.noCategories();
+                }
+                recyclerViewElement.setAdapter(searchAdapter);
+            }//public void run() {
+        });
+    }
+
+    @Override
+    public void showCategoriesList() {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                recyclerViewCategory.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    @Override
+    public void hideCategoriesList() {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                recyclerViewCategory.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    @Override
+    public void hideElementsList() {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+               recyclerViewElement.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    @Override
+    public void showElementList() {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                recyclerViewElement.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    @Override
+    public void showBackButton() {
+
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                backButton.setClickable(true);
+                backButton.setVisibility(View.VISIBLE);
+            }
+        });
+
+    }
+
+    @Override
+    public void hideBackButton() {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                backButton.setClickable(false);
+                backButton.setVisibility(View.INVISIBLE);
+            }
+        });
 
 
-        transaction.replace(R.id.fragment_container, detailFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
-    }*/
+    }
+
 
 }

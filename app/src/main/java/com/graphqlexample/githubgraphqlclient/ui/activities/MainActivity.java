@@ -34,7 +34,7 @@ public class MainActivity extends BaseActivity {
         transaction.commit();
         categoryItemList = new ArrayList<>();
 
-        GithubEndpointManager.getInstance().retrieveCategories();
+
     }
 
 
