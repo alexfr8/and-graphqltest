@@ -1,0 +1,12 @@
+query getAllCategories{
+    marketplaceCategories{
+      name
+      slug
+      description
+		  howItWorks
+		  primaryListingCount
+		  resourcePath
+		  secondaryListingCount
+			url
+    }
+}

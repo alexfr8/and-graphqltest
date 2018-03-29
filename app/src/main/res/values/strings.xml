@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">GithubGraphqlClient</string>
+
+    <!-- search fragment -->
+
+    <string name="search_label">FIND YOUR FAVOURITE MAKETPLACE ELEMENTS</string>
+    <string name="search_sublabel1">Categories</string>
+    <string name="search_sublabel2">Go to listen some music!</string>
+
+    <string name="no_results">No matches found</string>
+    <string name="no_categories">No categories found</string>
+    <string name="no_elements">No elements found</string>
+    <string name="error_loading">Can not perform the search, sorry for the inconveniences!></string>
+
+
+    <string name="category_count">Number of elements: </string>
+
+</resources>
