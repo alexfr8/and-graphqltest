@@ -1,0 +1,256 @@
+Grapql examples
+
+for altair
+
+https://api.github.com/graphql
+
+  BASIC WHO
+  query {
+    viewer {
+      login
+      name
+    }
+  }
+
+MARKET PLACE CATEGORIES
+  query{
+    marketplaceCategories{
+      name
+      slug
+      description
+		  howItWorks
+		  primaryListingCount
+		  resourcePath
+		  secondaryListingCount
+			url
+    }
+}
+
+MARKETPLACE LISTING
+query {
+    marketplaceListing(slug: "testquality"){
+      
+      companyUrl
+		  configurationResourcePath
+		  configurationUrl
+			documentationUrl
+			extendedDescription
+			extendedDescriptionHTML
+			fullDescription
+			fullDescriptionHTML
+			hasApprovalBeenRequested
+			hasPublishedFreeTrialPlans
+			hasTermsOfService
+			howItWorks
+			howItWorksHTML
+			id
+			installationUrl
+			installedForViewer
+			isApproved
+			isDelisted
+			isDraft
+			isPaid
+			isRejected
+			logoBackgroundColor
+			name
+			normalizedShortDescription
+			pricingUrl
+			primaryCategory{
+        	description
+					howItWorks
+					name
+					primaryListingCount
+					resourcePath
+					secondaryListingCount
+					slug
+					url
+      }
+			privacyPolicyUrl
+			resourcePath
+			secondaryCategory{
+        	description
+					howItWorks
+					name
+					primaryListingCount
+					resourcePath
+					secondaryListingCount
+					slug
+					url
+      }
+			shortDescription
+			slug
+			statusUrl
+			supportEmail
+			supportUrl
+			termsOfServiceUrl
+			url
+			viewerCanAddPlans
+		  viewerCanApprove
+			viewerCanDelist
+			viewerCanEdit
+			viewerCanEditCategories
+			viewerCanEditPlans
+			viewerCanRedraft
+			viewerCanReject
+			viewerCanRequestApproval
+			viewerHasPurchased
+			viewerHasPurchasedForAllOrganizations
+			viewerIsListingAdmin
+ 	 }
+}
+
+
+
+MARKET PLACE LISTINGS
+
+query{
+  marketplaceListings(last: 50 categorySlug:"code-quality"){
+      nodes{
+         companyUrl
+		  configurationResourcePath
+		  configurationUrl
+			documentationUrl
+			extendedDescription
+			extendedDescriptionHTML
+			fullDescription
+			fullDescriptionHTML
+			hasApprovalBeenRequested
+			hasPublishedFreeTrialPlans
+			hasTermsOfService
+			howItWorks
+			howItWorksHTML
+			id
+			installationUrl
+			installedForViewer
+			isApproved
+			isDelisted
+			isDraft
+			isPaid
+			isRejected
+			logoBackgroundColor
+			name
+			normalizedShortDescription
+			pricingUrl
+			primaryCategory{
+        	description
+					howItWorks
+					name
+					primaryListingCount
+					resourcePath
+					secondaryListingCount
+					slug
+					url
+      }
+			privacyPolicyUrl
+			resourcePath
+			secondaryCategory{
+        	description
+					howItWorks
+					name
+					primaryListingCount
+					resourcePath
+					secondaryListingCount
+					slug
+					url
+      }
+			shortDescription
+			slug
+			statusUrl
+			supportEmail
+			supportUrl
+			termsOfServiceUrl
+			url
+			viewerCanAddPlans
+		  viewerCanApprove
+			viewerCanDelist
+			viewerCanEdit
+			viewerCanEditCategories
+			viewerCanEditPlans
+			viewerCanRedraft
+			viewerCanReject
+			viewerCanRequestApproval
+			viewerHasPurchased
+			viewerHasPurchasedForAllOrganizations
+			viewerIsListingAdmin
+      }
+    
+      edges {
+      	cursor
+				node{
+          companyUrl
+		  configurationResourcePath
+		  configurationUrl
+			documentationUrl
+			extendedDescription
+			extendedDescriptionHTML
+			fullDescription
+			fullDescriptionHTML
+			hasApprovalBeenRequested
+			hasPublishedFreeTrialPlans
+			hasTermsOfService
+			howItWorks
+			howItWorksHTML
+			id
+			installationUrl
+			installedForViewer
+			isApproved
+			isDelisted
+			isDraft
+			isPaid
+			isRejected
+			logoBackgroundColor
+			name
+			normalizedShortDescription
+			pricingUrl
+			primaryCategory{
+        	description
+					howItWorks
+					name
+					primaryListingCount
+					resourcePath
+					secondaryListingCount
+					slug
+					url
+      }
+			privacyPolicyUrl
+			resourcePath
+			secondaryCategory{
+        	description
+					howItWorks
+					name
+					primaryListingCount
+					resourcePath
+					secondaryListingCount
+					slug
+					url
+      }
+			shortDescription
+			slug
+			statusUrl
+			supportEmail
+			supportUrl
+			termsOfServiceUrl
+			url
+			viewerCanAddPlans
+		  viewerCanApprove
+			viewerCanDelist
+			viewerCanEdit
+			viewerCanEditCategories
+			viewerCanEditPlans
+			viewerCanRedraft
+			viewerCanReject
+			viewerCanRequestApproval
+			viewerHasPurchased
+			viewerHasPurchasedForAllOrganizations
+			viewerIsListingAdmin
+        }
+      }
+    pageInfo{
+        endCursor
+				hasNextPage
+				hasPreviousPage
+				startCursor
+      }
+			totalCount
+    }
+}
